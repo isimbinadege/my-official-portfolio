@@ -1,65 +1,363 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useEffect, useRef, useState } from 'react';
+
+function Home() {
+  const canvasRef = useRef(null);
+  const [displayText, setDisplayText] = useState('');
+  const [wordIndex, setWordIndex] = useState(0);
+  const words = ['Innovator', 'Creator', 'Developer', 'Designer', 'Problem Solver'];
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const bubbles = [];
+    const bubbleCount = 40;
+
+    class Bubble {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 100 + 40;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.15 + 0.05;
+        this.color = this.getRandomColor();
+      }
+
+      getRandomColor() {
+        const colors = [
+          'rgba(139, 116, 95, ',   // Warm brown
+          'rgba(180, 142, 100, ',  // Golden brown
+          'rgba(80, 80, 80, ',     // Dark gray
+          'rgba(120, 100, 80, ',   // Muted brown
+          'rgba(100, 85, 70, ',    // Deep brown
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+          this.speedX *= -1;
+        }
+        if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+          this.speedY *= -1;
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        const gradient = ctx.createRadialGradient(
+          this.x - this.radius / 3,
+          this.y - this.radius / 3,
+          0,
+          this.x,
+          this.y,
+          this.radius
+        );
+        gradient.addColorStop(0, this.color + (this.opacity + 0.1) + ')');
+        gradient.addColorStop(1, this.color + '0)');
+        ctx.fillStyle = gradient;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < bubbleCount; i++) {
+      bubbles.push(new Bubble());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => {
+        bubble.update();
+        bubble.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Typewriter effect for rotating words
+  useEffect(() => {
+    let charIndex = 0;
+    let isDeleting = false;
+    let timeoutId;
+
+    const typeWriter = () => {
+      const currentWord = words[wordIndex];
+      
+      if (!isDeleting) {
+        setDisplayText(currentWord.substring(0, charIndex + 1));
+        charIndex++;
+        
+        if (charIndex === currentWord.length) {
+          isDeleting = true;
+          timeoutId = setTimeout(typeWriter, 2000);
+          return;
+        }
+      } else {
+        setDisplayText(currentWord.substring(0, charIndex - 1));
+        charIndex--;
+        
+        if (charIndex === 0) {
+          isDeleting = false;
+          setWordIndex((prev) => (prev + 1) % words.length);
+          timeoutId = setTimeout(typeWriter, 500);
+          return;
+        }
+      }
+      
+      timeoutId = setTimeout(typeWriter, isDeleting ? 50 : 100);
+    };
+
+    typeWriter();
+    return () => clearTimeout(timeoutId);
+  }, [wordIndex]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-neutral-950 to-stone-950 relative overflow-hidden">
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none z-0"
+      />
+      
+      {/* Elegant grain texture overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-30 mix-blend-overlay bg-noise"></div>
+      
+      <nav className="fixed top-0 w-full bg-black/30 backdrop-blur-2xl z-50 border-b border-stone-800/20">
+        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
+          <div className="text-3xl font-serif tracking-widest text-stone-300 hover:text-amber-600 transition-all duration-500">
+            JD
+          </div>
+          <div className="flex gap-12 text-xs font-light tracking-[0.2em] uppercase">
+            <a href="#" className="text-amber-600 hover:text-amber-500 transition-all duration-300 relative group">
+              Home
+              <span className="absolute -bottom-1 left-0 w-full h-px bg-amber-600 transform scale-x-100 group-hover:scale-x-0 transition-transform duration-300"></span>
+            </a>
+            <a href="#about" className="text-stone-400 hover:text-amber-600 transition-all duration-300 relative group">
+              About
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
+            </a>
+            <a href="#skills" className="text-stone-400 hover:text-amber-600 transition-all duration-300 relative group">
+              Skills
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
+            </a>
+            <a href="#projects" className="text-stone-400 hover:text-amber-600 transition-all duration-300 relative group">
+              Projects
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
+            </a>
+            <a href="#contact" className="text-stone-400 hover:text-amber-600 transition-all duration-300 relative group">
+              Contact
+              <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </nav>
+
+      <section className="min-h-screen flex items-center justify-center px-8 pt-20 relative z-10">
+        <div className="max-w-7xl w-full">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            {/* Left side - Text content */}
+            <div className="space-y-10 order-2 lg:order-1">
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-stone-900/40 backdrop-blur-sm rounded-none text-stone-400 text-xs font-light tracking-[0.15em] uppercase mb-6 border border-stone-800/30 animate-fade-in-up">
+                <span className="w-2 h-2 bg-amber-600 rounded-full animate-pulse-soft"></span>
+                <span>Welcome to my portfolio</span>
+              </div>
+              
+              <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <h2 className="text-xl font-light tracking-[0.3em] uppercase text-stone-500 mb-4">
+                  Hi, I'm
+                </h2>
+                <h1 className="text-7xl lg:text-8xl font-serif tracking-tight text-stone-200 leading-none">
+                  Your Name
+                </h1>
+              </div>
+              
+              <div className="text-4xl lg:text-5xl font-light text-stone-400 leading-relaxed animate-fade-in-up space-y-2" style={{ animationDelay: '0.4s' }}>
+                <div className="font-serif italic text-stone-300">
+                  Full Stack <span className="text-amber-600">{displayText}</span>
+                  <span className="animate-blink text-amber-600">|</span>
+                </div>
+              </div>
+              
+              <p className="text-lg font-light text-stone-500 leading-loose max-w-xl animate-fade-in-up tracking-wide" style={{ animationDelay: '0.6s' }}>
+                Crafting elegant digital experiences where aesthetics meet functionality. 
+                Every line of code tells a story of precision and creativity.
+              </p>
+              
+              <div className="flex gap-6 pt-8 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+                <a href="#contact" className="group relative px-10 py-5 bg-transparent border border-amber-700/50 text-amber-600 rounded-none font-light tracking-[0.2em] uppercase text-xs overflow-hidden transition-all duration-700 hover:border-amber-600 hover:shadow-2xl hover:shadow-amber-900/30">
+                  <span className="relative z-10 flex items-center gap-3">
+                    Let's Connect
+                    <span className="inline-block group-hover:translate-x-2 transition-transform duration-500">→</span>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-900/10 to-amber-800/10 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left"></div>
+                </a>
+                
+                <a href="#projects" className="group px-10 py-5 bg-stone-900/30 backdrop-blur-sm border border-stone-800/30 text-stone-400 rounded-none font-light tracking-[0.2em] uppercase text-xs hover:border-stone-700 hover:text-stone-300 transition-all duration-700 hover:shadow-xl hover:shadow-stone-900/50">
+                  <span>View Work</span>
+                </a>
+              </div>
+              
+              <div className="flex gap-8 pt-12 animate-fade-in-up" style={{ animationDelay: '1s' }}>
+                <a href="https://github.com" className="group w-12 h-12 flex items-center justify-center border border-stone-800/40 hover:border-amber-700 transition-all duration-500 hover:shadow-xl hover:shadow-amber-900/20">
+                  <svg className="w-5 h-5 text-stone-600 group-hover:text-amber-600 transition-colors duration-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
+                
+                <a href="https://linkedin.com" className="group w-12 h-12 flex items-center justify-center border border-stone-800/40 hover:border-amber-700 transition-all duration-500 hover:shadow-xl hover:shadow-amber-900/20">
+                  <svg className="w-5 h-5 text-stone-600 group-hover:text-amber-600 transition-colors duration-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+                
+                <a href="https://twitter.com" className="group w-12 h-12 flex items-center justify-center border border-stone-800/40 hover:border-amber-700 transition-all duration-500 hover:shadow-xl hover:shadow-amber-900/20">
+                  <svg className="w-5 h-5 text-stone-600 group-hover:text-amber-600 transition-colors duration-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                  </svg>
+                </a>
+              </div>
+
+              {/* Stats section */}
+              <div className="grid grid-cols-3 gap-8 pt-16 border-t border-stone-800/30 animate-fade-in-up" style={{ animationDelay: '1.2s' }}>
+                <div className="space-y-2">
+                  <div className="text-4xl font-serif text-amber-600">10+</div>
+                  <div className="text-xs font-light tracking-[0.2em] uppercase text-stone-500">Years Experience</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-serif text-amber-600">350+</div>
+                  <div className="text-xs font-light tracking-[0.2em] uppercase text-stone-500">Projects Done</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-4xl font-serif text-amber-600">10+</div>
+                  <div className="text-xs font-light tracking-[0.2em] uppercase text-stone-500">Cities</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right side - Image */}
+            <div className="relative order-1 lg:order-2 animate-fade-in-scale">
+              <div className="relative group">
+                {/* Elegant border frame */}
+                <div className="absolute -inset-4 border border-amber-800/30 pointer-events-none"></div>
+                <div className="absolute -inset-8 border border-stone-800/20 pointer-events-none"></div>
+                
+                {/* Subtle glow effect */}
+                <div className="absolute -inset-6 bg-gradient-to-br from-amber-900/10 via-transparent to-stone-900/10 blur-3xl opacity-50 group-hover:opacity-75 transition-opacity duration-1000"></div>
+                
+                {/* Image container */}
+                <div className="relative overflow-hidden bg-gradient-to-br from-stone-900 to-stone-950 border border-stone-800/50">
+                  <img 
+                    src="/images/moi.png" 
+                    alt="Profile" 
+                    className="w-full h-auto object-cover grayscale-[30%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-900/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                </div>
+
+                {/* Corner accents */}
+                <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-amber-700/60 -translate-x-2 -translate-y-2"></div>
+                <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-amber-700/60 translate-x-2 -translate-y-2"></div>
+                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-amber-700/60 -translate-x-2 translate-y-2"></div>
+                <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-amber-700/60 translate-x-2 translate-y-2"></div>
+
+                {/* Status badge */}
+                <div className="absolute -top-4 -right-4 bg-stone-950 border border-amber-700/50 px-6 py-3 backdrop-blur-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-amber-600 rounded-full animate-pulse-soft"></span>
+                    <span className="text-xs font-light tracking-[0.15em] uppercase text-stone-400">Available</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Elegant scroll indicator */}
+          <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-float-slow">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-px h-20 bg-gradient-to-b from-transparent via-stone-700 to-transparent"></div>
+              <div className="text-xs font-light tracking-[0.2em] uppercase text-stone-600">Scroll</div>
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
+
+      <style jsx>{`
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(40px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fade-in-scale {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes float-slow {
+          0%, 100% { transform: translateX(-50%) translateY(0px); }
+          50% { transform: translateX(-50%) translateY(-15px); }
+        }
+        @keyframes pulse-soft {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+        @keyframes blink {
+          0%, 49% { opacity: 1; }
+          50%, 100% { opacity: 0; }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 1.2s ease-out forwards;
+          opacity: 0;
+        }
+        .animate-fade-in-scale {
+          animation: fade-in-scale 1.5s ease-out forwards;
+          opacity: 0;
+        }
+        .animate-float-slow {
+          animation: float-slow 4s ease-in-out infinite;
+        }
+        .animate-pulse-soft {
+          animation: pulse-soft 2s ease-in-out infinite;
+        }
+        .animate-blink {
+          animation: blink 1s step-start infinite;
+        }
+        .bg-noise {
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+      `}</style>
     </div>
   );
 }
+
+export default Home;
