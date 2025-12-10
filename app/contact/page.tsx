@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import MobileNav from '../../components/MobileNav';
 
 function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -25,11 +26,11 @@ function Contact() {
       <div className="fixed inset-0 z-0 pointer-events-none opacity-30 mix-blend-overlay bg-noise"></div>
       
       <nav className="fixed top-0 w-full bg-black/30 backdrop-blur-2xl z-50 border-b border-stone-800/20">
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
-          <Link href="/" className="text-3xl font-serif tracking-widest text-stone-300 hover:text-amber-600 transition-all duration-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-center">
+          <Link href="/" className="text-2xl sm:text-3xl font-serif tracking-widest text-stone-300 hover:text-amber-600 transition-all duration-500">
             IN
           </Link>
-          <div className="flex gap-12 text-xs font-light tracking-[0.2em] uppercase">
+          <div className="hidden sm:flex gap-3 md:gap-6 lg:gap-12 text-xs font-light tracking-[0.2em] uppercase">
             <Link href="/" className="text-stone-400 hover:text-amber-600 transition-all duration-300 relative group">
               Home
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
@@ -51,21 +52,30 @@ function Contact() {
               <span className="absolute -bottom-1 left-0 w-full h-px bg-amber-600 transform scale-x-100 group-hover:scale-x-0 transition-transform duration-300"></span>
             </Link>
           </div>
+          <div className="sm:hidden">
+            <div className="flex gap-2 text-xs uppercase tracking-wider">
+              <Link href="/" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">H</Link>
+              <Link href="/about" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">A</Link>
+              <Link href="/skills" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">S</Link>
+              <Link href="/projects" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">P</Link>
+              <Link href="/contact" className="text-amber-600 px-1 py-1 bg-amber-600/10 border border-amber-600/30">C</Link>
+            </div>
+          </div>
         </div>
       </nav>
 
-      <section className="pt-40 pb-20 px-8 relative z-10">
+      <section className="pt-24 sm:pt-32 lg:pt-40 pb-12 sm:pb-20 px-4 sm:px-8 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-16 text-center animate-fade-in-up">
-            <h1 className="text-7xl font-serif tracking-tight text-stone-200 mb-6">Let's Connect</h1>
-            <div className="h-px w-32 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto mb-8"></div>
-            <p className="text-xl font-light text-stone-400 max-w-2xl mx-auto leading-relaxed">
+          <div className="mb-12 sm:mb-16 text-center animate-fade-in-up">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif tracking-tight text-stone-200 mb-4 sm:mb-6">Let's Connect</h1>
+            <div className="h-px w-20 sm:w-32 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto mb-6 sm:mb-8"></div>
+            <p className="text-lg sm:text-xl font-light text-stone-400 max-w-2xl mx-auto leading-relaxed px-4">
               I'm always open to new opportunities and collaborations. Feel free to reach out!
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="bg-stone-900/40 backdrop-blur-sm border border-stone-800/30 p-10 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12">
+            <div className="bg-stone-900/40 backdrop-blur-sm border border-stone-800/30 p-6 sm:p-10 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <h2 className="text-2xl font-serif text-stone-200 mb-8">Send a Message</h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>

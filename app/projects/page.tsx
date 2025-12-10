@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import MobileNav from '../../components/MobileNav';
 
 function Projects() {
   const projects = [
@@ -43,11 +44,11 @@ function Projects() {
       <div className="fixed inset-0 z-0 pointer-events-none opacity-30 mix-blend-overlay bg-noise"></div>
       
       <nav className="fixed top-0 w-full bg-black/30 backdrop-blur-2xl z-50 border-b border-stone-800/20">
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
-          <Link href="/" className="text-3xl font-serif tracking-widest text-stone-300 hover:text-amber-600 transition-all duration-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-center">
+          <Link href="/" className="text-2xl sm:text-3xl font-serif tracking-widest text-stone-300 hover:text-amber-600 transition-all duration-500">
             IN
           </Link>
-          <div className="flex gap-12 text-xs font-light tracking-[0.2em] uppercase">
+          <div className="hidden sm:flex gap-3 md:gap-6 lg:gap-12 text-xs font-light tracking-[0.2em] uppercase">
             <Link href="/" className="text-stone-400 hover:text-amber-600 transition-all duration-300 relative group">
               Home
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
@@ -69,31 +70,46 @@ function Projects() {
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
             </Link>
           </div>
+          <div className="sm:hidden">
+            <div className="flex gap-2 text-xs uppercase tracking-wider">
+              <Link href="/" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">H</Link>
+              <Link href="/about" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">A</Link>
+              <Link href="/skills" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">S</Link>
+              <Link href="/projects" className="text-amber-600 px-1 py-1 bg-amber-600/10 border border-amber-600/30">P</Link>
+              <Link href="/contact" className="text-stone-400 hover:text-amber-600 transition-colors duration-300 px-1 py-1">C</Link>
+            </div>
+          </div>
         </div>
       </nav>
 
-      <section className="pt-40 pb-20 px-8 relative z-10">
+      <section className="pt-24 sm:pt-32 lg:pt-40 pb-12 sm:pb-20 px-4 sm:px-8 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 animate-fade-in-up">
-            <h1 className="text-7xl font-serif tracking-tight text-stone-200 mb-6">Featured Projects</h1>
-            <div className="h-px w-32 bg-gradient-to-r from-amber-600 to-transparent"></div>
+          <div className="mb-12 sm:mb-16 animate-fade-in-up">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif tracking-tight text-stone-200 mb-4 sm:mb-6">Featured Projects</h1>
+            <div className="h-px w-20 sm:w-32 bg-gradient-to-r from-amber-600 to-transparent"></div>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-10">
+          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
             {projects.map((project, index) => (
               <div key={index} className="group bg-stone-900/40 backdrop-blur-sm border border-stone-800/30 overflow-hidden hover:border-amber-800/50 transition-all duration-500 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div className="h-64 relative overflow-hidden">
+                <div className="h-48 sm:h-56 lg:h-64 relative overflow-hidden">
+                  <div className="absolute inset-2 border border-amber-600/20 z-10 pointer-events-none group-hover:border-amber-600/40 transition-colors duration-500"></div>
+                  <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-amber-600/30 z-10"></div>
+                  <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-amber-600/30 z-10"></div>
                   <img 
                     src={project.image} 
                     alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 filter contrast-110 brightness-90 group-hover:brightness-100"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent opacity-60"></div>
-                  <div className="absolute inset-0 bg-stone-900/20 group-hover:bg-stone-900/10 transition-colors duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-900/20 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-transparent to-stone-900/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div className="absolute top-4 right-4 bg-stone-950/80 backdrop-blur-sm px-3 py-1 z-20">
+                    <span className="text-xs text-amber-600 font-light tracking-wider uppercase">Live Project</span>
+                  </div>
                 </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-serif text-stone-200 mb-3">{project.title}</h3>
-                  <p className="text-stone-400 font-light mb-6 leading-relaxed">{project.desc}</p>
+                <div className="p-6 sm:p-8">
+                  <h3 className="text-xl sm:text-2xl font-serif text-stone-200 mb-3">{project.title}</h3>
+                  <p className="text-sm sm:text-base text-stone-400 font-light mb-4 sm:mb-6 leading-relaxed">{project.desc}</p>
                   <div className="flex flex-wrap gap-3 mb-6">
                     {project.tags.map(tag => (
                       <span key={tag} className="px-4 py-1 bg-amber-950/30 text-amber-600 text-xs font-light tracking-wider border border-amber-900/30">{tag}</span>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import MobileNav from '../../components/MobileNav';
 
 function About() {
   return (
@@ -8,11 +9,11 @@ function About() {
       <div className="fixed inset-0 z-0 pointer-events-none opacity-30 mix-blend-overlay bg-noise"></div>
       
       <nav className="fixed top-0 w-full bg-black/30 backdrop-blur-2xl z-50 border-b border-stone-800/20">
-        <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
-          <Link href="/" className="text-3xl font-serif tracking-widest text-stone-300 hover:text-amber-600 transition-all duration-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-center">
+          <Link href="/" className="text-2xl sm:text-3xl font-serif tracking-widest text-stone-300 hover:text-amber-600 transition-all duration-500">
             IN
           </Link>
-          <div className="flex gap-12 text-xs font-light tracking-[0.2em] uppercase">
+          <div className="hidden sm:flex gap-3 md:gap-6 lg:gap-12 text-xs font-light tracking-[0.2em] uppercase">
             <Link href="/" className="text-stone-400 hover:text-amber-600 transition-all duration-300 relative group">
               Home
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
@@ -34,17 +35,27 @@ function About() {
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-amber-600 transform group-hover:w-full transition-all duration-300"></span>
             </Link>
           </div>
+          <div className="sm:hidden">
+            <div className="flex gap-2 text-xs uppercase tracking-wider mb-2">
+              <Link href="/" className="text-stone-400 hover:text-amber-600 transition-colors duration-300">H</Link>
+              <Link href="/about" className="text-amber-600">A</Link>
+              <Link href="/skills" className="text-stone-400 hover:text-amber-600 transition-colors duration-300">S</Link>
+              <Link href="/projects" className="text-stone-400 hover:text-amber-600 transition-colors duration-300">P</Link>
+              <Link href="/contact" className="text-stone-400 hover:text-amber-600 transition-colors duration-300">C</Link>
+            </div>
+          </div>
+
         </div>
       </nav>
 
-      <section className="pt-40 pb-20 px-8 relative z-10">
+      <section className="pt-24 sm:pt-32 lg:pt-40 pb-12 sm:pb-20 px-4 sm:px-8 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-16 animate-fade-in-up">
-            <h1 className="text-7xl font-serif tracking-tight text-stone-200 mb-6">About Me</h1>
-            <div className="h-px w-32 bg-gradient-to-r from-amber-600 to-transparent"></div>
+          <div className="mb-8 sm:mb-16 animate-fade-in-up">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif tracking-tight text-stone-200 mb-4 sm:mb-6">About Me</h1>
+            <div className="h-px w-20 sm:w-32 bg-gradient-to-r from-amber-600 to-transparent"></div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid lg:grid-cols-3 gap-8 sm:gap-12">
             <div className="md:col-span-2 space-y-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="bg-stone-900/40 backdrop-blur-sm border border-stone-800/30 p-10">
                 <p className="text-lg font-light text-stone-400 leading-loose mb-6">
@@ -56,47 +67,47 @@ function About() {
               </div>
               
               <div className="relative">
-                <h3 className="text-2xl font-serif text-stone-200 mb-12 tracking-wide text-center">Professional Journey</h3>
+                <h3 className="text-xl sm:text-2xl font-serif text-stone-200 mb-8 sm:mb-12 tracking-wide text-center">Professional Journey</h3>
                 <div className="relative">
-                  <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-amber-600/50 via-amber-600/30 to-transparent"></div>
+                  <div className="hidden sm:block absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-amber-600/50 via-amber-600/30 to-transparent"></div>
                   
-                  <div className="space-y-16">
-                    <div className="relative flex items-center">
-                      <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600 rotate-45 z-10"></div>
-                      <div className="w-full bg-gradient-to-r from-transparent via-stone-800/20 to-amber-950/20 p-8 ml-8 border-l-4 border-amber-600/50 backdrop-blur-sm">
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="text-xl font-serif text-amber-400">Software Developer</h4>
-                          <div className="px-3 py-1 bg-amber-600/20 text-amber-300 text-xs tracking-wider border border-amber-600/30">Sep.2025 - Present</div>
+                  <div className="space-y-8 sm:space-y-16">
+                    <div className="relative sm:flex sm:items-center">
+                      <div className="hidden sm:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600 rotate-45 z-10"></div>
+                      <div className="w-full bg-gradient-to-r from-transparent via-stone-800/20 to-amber-950/20 p-4 sm:p-8 sm:ml-8 border-l-4 border-amber-600/50 backdrop-blur-sm">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
+                          <h4 className="text-lg sm:text-xl font-serif text-amber-400">Software Developer</h4>
+                          <div className="px-3 py-1 bg-amber-600/20 text-amber-300 text-xs tracking-wider border border-amber-600/30 self-start">Sep.2025 - Present</div>
                         </div>
-                        <p className="text-stone-300 text-sm mb-4 italic">IGIRE Rwanda</p>
-                        <p className="text-stone-400 font-light leading-relaxed">
+                        <p className="text-stone-300 text-sm mb-3 sm:mb-4 italic">IGIRE Rwanda</p>
+                        <p className="text-sm sm:text-base text-stone-400 font-light leading-relaxed">
                         I develop responsive full-stack web features that combine intuitive, user-focused interfaces with reliable backend functionality. I work collaboratively with peers across testing, optimization, and deployment workflows to deliver stable, high-quality releases. I also follow secure coding standards and continuously strengthen my database management and API integration skills to build scalable and efficient digital solutions.
                         </p>
                       </div>
                     </div>
                     
-                    <div className="relative flex items-center">
-                      <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600/70 rotate-45 z-10"></div>
-                      <div className="w-full bg-gradient-to-l from-transparent via-stone-800/20 to-amber-950/20 p-8 mr-8 border-r-4 border-amber-600/50 backdrop-blur-sm">
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="text-xl font-serif text-amber-400">Software Developer </h4>
-                          <div className="px-3 py-1 bg-amber-600/20 text-amber-300 text-xs tracking-wider border border-amber-600/30">Feb-August 2025</div>
+                    <div className="relative sm:flex sm:items-center">
+                      <div className="hidden sm:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600/70 rotate-45 z-10"></div>
+                      <div className="w-full bg-gradient-to-l from-transparent via-stone-800/20 to-amber-950/20 p-4 sm:p-8 sm:mr-8 border-r-4 sm:border-r-4 sm:border-l-0 border-l-4 border-amber-600/50 backdrop-blur-sm">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
+                          <h4 className="text-lg sm:text-xl font-serif text-amber-400">Software Developer</h4>
+                          <div className="px-3 py-1 bg-amber-600/20 text-amber-300 text-xs tracking-wider border border-amber-600/30 self-start">Feb-August 2025</div>
                         </div>
-                        <p className="text-stone-300 text-sm mb-4 italic">Comphrehensive Staffing Resources</p>
-                        <p className="text-stone-400 font-light leading-relaxed">
+                        <p className="text-stone-300 text-sm mb-3 sm:mb-4 italic">Comprehensive Staffing Resources</p>
+                        <p className="text-sm sm:text-base text-stone-400 font-light leading-relaxed">
                           I completed an intensive training program that enhanced both my technical abilities and soft skills, including communication, leadership, and teamwork. During my internship, I developed front-end interfaces and supported backend development while contributing to real, production-level projects. Through these experiences, I strengthened my problem-solving skills and collaborated effectively with cross-functional teams to deliver solutions efficiently and on time.
                         </p>
                       </div>
                     </div>
-                     <div className="relative flex items-center">
-                      <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600 rotate-45 z-10"></div>
-                      <div className="w-full bg-gradient-to-r from-transparent via-stone-800/20 to-amber-950/20 p-8 ml-8 border-l-4 border-amber-600/50 backdrop-blur-sm">
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="text-xl font-serif text-amber-400">Software Developer</h4>
-                          <div className="px-3 py-1 bg-amber-600/20 text-amber-300 text-xs tracking-wider border border-amber-600/30">Sep.2025 - Present</div>
+                     <div className="relative sm:flex sm:items-center">
+                      <div className="hidden sm:block absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-amber-600 rotate-45 z-10"></div>
+                      <div className="w-full bg-gradient-to-r from-transparent via-stone-800/20 to-amber-950/20 p-4 sm:p-8 sm:ml-8 border-l-4 border-amber-600/50 backdrop-blur-sm">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
+                          <h4 className="text-lg sm:text-xl font-serif text-amber-400">Software Developer</h4>
+                          <div className="px-3 py-1 bg-amber-600/20 text-amber-300 text-xs tracking-wider border border-amber-600/30 self-start">2024</div>
                         </div>
-                        <p className="text-stone-300 text-sm mb-4 italic">IDA Technology</p>
-                        <p className="text-stone-400 font-light leading-relaxed">
+                        <p className="text-stone-300 text-sm mb-3 sm:mb-4 italic">IDA Technology</p>
+                        <p className="text-sm sm:text-base text-stone-400 font-light leading-relaxed">
                      I received structured, hands-on training in full-stack development through a program supported by the Ministry of Education. During this experience, I contributed to building and improving internal software systems while applying clean code principles and proper version control practices. I also tested new features, resolved issues, and refined solutions based on user and team feedback, strengthening my technical skills and attention to detail.
                         </p>
                       </div>
