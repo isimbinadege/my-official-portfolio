@@ -11,10 +11,10 @@ function Home() {
   const words = ['Innovator', 'Creator', 'Front-End Specialist', 'Designer', 'Problem Solver'];
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasRef.current as HTMLCanvasElement | null;
     if (!canvas) return;
     
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d')!;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
